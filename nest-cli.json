@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json.schemastore.org/nest-cli",
+  "collection": "@nestjs/schematics",
+  "sourceRoot": "apps/grupo-primo-backend-test/src",
+  "monorepo": true,
+  "root": "apps/grupo-primo-backend-test",
+  "compilerOptions": {
+    "webpack": true,
+    "tsConfigPath": "apps/grupo-primo-backend-test/tsconfig.app.json"
+  },
+  "projects": {
+    "grupo-primo-backend-test": {
+      "type": "application",
+      "root": "apps/grupo-primo-backend-test",
+      "entryFile": "main",
+      "sourceRoot": "apps/grupo-primo-backend-test/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/grupo-primo-backend-test/tsconfig.app.json"
+      }
+    },
+    "accounts": {
+      "type": "application",
+      "root": "apps/accounts",
+      "entryFile": "main",
+      "sourceRoot": "apps/accounts/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/accounts/tsconfig.app.json"
+      }
+    },
+    "core": {
+      "type": "library",
+      "root": "libs/core",
+      "entryFile": "index",
+      "sourceRoot": "libs/core/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/core/tsconfig.lib.json"
+      }
+    }
+  }
+}
