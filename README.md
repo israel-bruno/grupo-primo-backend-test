@@ -76,17 +76,17 @@ Acessar a documentação dos endpoints:
 Acessar logs da aplicação:
 
 ```bash
-docker-compose logs app -f
+docker-compose --env-file=.env.example logs -f app
 ```
 
 Rodar testes unitários
 
 ```bash
-docker-compose exec app npm run test
+docker-compose --env-file=.env.example exec app npm run test
 ```
 
 Rodar testes e2e - (Estes contém os cenários de concorrência)
 
 ```bash
-docker-compose exec app npm run test:e2e
+docker-compose --env-file=.env.example exec app npm run test:e2e
 ```
