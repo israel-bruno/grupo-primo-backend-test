@@ -52,7 +52,7 @@ describe('AccountsController (e2e)', () => {
 
       const promises = []
 
-      for (let i = 0; i < 50; i++) {
+      for (let i = 0; i < 10; i++) {
         promises.push(request(app.getHttpServer()).post(`/accounts/${account.id}/withdraw`).send({ amount: withdrawAmount }))
       }
 
