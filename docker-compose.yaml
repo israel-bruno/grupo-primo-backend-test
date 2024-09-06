@@ -29,7 +29,7 @@ services:
     depends_on:
       - postgres
 
-    command: npm run start:dev
+    command: yarn start
     env_file:
       - ./.env.example
 

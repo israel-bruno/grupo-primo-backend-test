@@ -8,7 +8,7 @@ export class AppFactory {
   static async create(module: any): Promise<NestApplication> {
     const app = await NestFactory.create<NestApplication>(module)
 
-    const document = SwaggerModule.createDocument(app, DocsConfig, { include: [module] })
+    const document = SwaggerModule.createDocument(app, DocsConfig, { include: [module], deepScanRoutes: true })
 
     SwaggerModule.setup('/api/docs', app, document)
 

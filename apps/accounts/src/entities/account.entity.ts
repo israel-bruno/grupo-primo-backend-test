@@ -5,9 +5,17 @@ export class AccountEntity {
   @PrimaryGeneratedColumn()
   id: number
 
-  @Column({ name: 'name' })
+  @Column()
   name: string
 
-  @Column({ name: 'balance', type: 'numeric' })
+  @Column()
   balance: number
+
+  static example(): AccountEntity {
+    return {
+      id: 1,
+      name: 'John Doe',
+      balance: 300.0,
+    }
+  }
 }
