@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { IsNumber, IsString } from 'class-validator'
+import { IsNumber, IsString, Length, Min } from 'class-validator'
 
 export class CreateAccountDTO {
   @ApiProperty({
@@ -7,7 +7,8 @@ export class CreateAccountDTO {
     example: 100.45,
     required: true,
   })
-  @IsNumber()
+  @Min(0)
+  @IsNumber({ maxDecimalPlaces: 2 })
   balance: number
 
   @ApiProperty({
@@ -16,5 +17,6 @@ export class CreateAccountDTO {
     required: true,
   })
   @IsString()
+  @Length(3)
   name: string
 }

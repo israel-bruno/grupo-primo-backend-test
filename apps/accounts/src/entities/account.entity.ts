@@ -1,3 +1,4 @@
+import { ColumnNumericTransformer } from '@app/core/helpers'
 import { faker } from '@faker-js/faker'
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
 
@@ -9,7 +10,7 @@ export class AccountEntity {
   @Column()
   name: string
 
-  @Column()
+  @Column({ transformer: new ColumnNumericTransformer(), type: 'numeric' })
   balance: number
 
   static example(): AccountEntity {
