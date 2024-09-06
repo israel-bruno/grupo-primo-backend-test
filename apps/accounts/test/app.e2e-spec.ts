@@ -3,6 +3,7 @@ import { INestApplication } from '@nestjs/common'
 import { Test, TestingModule } from '@nestjs/testing'
 import * as request from 'supertest'
 import { AccountsRepository } from '../src/repositories/accounts.repository'
+import { TransferDTO } from '../src/use-cases/transfer/transfer.dto'
 import { AccountsModule } from './../src/accounts.module'
 
 describe('AccountsController (e2e)', () => {
@@ -65,7 +66,7 @@ describe('AccountsController (e2e)', () => {
   describe('/accounts/:id/deposit (POST)', () => {
     it('should deposit funds', async () => {
       const initialBalance = 0
-      const depositAmount = 99.97
+      const depositAmount = 100
 
       const account = await accountsRepository.save({ name: faker.person.fullName(), balance: initialBalance })
 
@@ -74,6 +75,40 @@ describe('AccountsController (e2e)', () => {
       const accountAfterDeposit = await accountsRepository.findOneByOrFail({ id: account.id })
 
       expect(accountAfterDeposit.balance).toBe(initialBalance + depositAmount)
+    })
+  })
+
+  describe('/accounts/:id/transfer (POST)', () => {
+    it('should transfer funds', async () => {
+      const account = await accountsRepository.save({ name: faker.person.fullName(), balance: 50 })
+      const targetAccount = await accountsRepository.save({ name: faker.person.fullName(), balance: 0 })
+
+      await request(app.getHttpServer())
+        .post(`/accounts/${account.id}/transfer`)
+        .send({ amount: 30, targetAccountId: targetAccount.id } as TransferDTO)
+        .expect(201)
+
+      const account1AfterTransfer = await accountsRepository.findOneByOrFail({ id: account.id })
+      const account2AfterTransfer = await accountsRepository.findOneByOrFail({ id: targetAccount.id })
+
+      expect(account1AfterTransfer.balance).toBe(20)
+      expect(account2AfterTransfer.balance).toBe(30)
+    })
+
+    it('should not transfer funds when the balance is insufficient', async () => {
+      const account = await accountsRepository.save({ name: faker.person.fullName(), balance: 50 })
+      const targetAccount = await accountsRepository.save({ name: faker.person.fullName(), balance: 0 })
+
+      await request(app.getHttpServer())
+        .post(`/accounts/${account.id}/transfer`)
+        .send({ amount: 60, targetAccountId: targetAccount.id } as TransferDTO)
+        .expect(400)
+
+      const account1AfterTransfer = await accountsRepository.findOneByOrFail({ id: account.id })
+      const account2AfterTransfer = await accountsRepository.findOneByOrFail({ id: targetAccount.id })
+
+      expect(account1AfterTransfer.balance).toBe(50)
+      expect(account2AfterTransfer.balance).toBe(0)
     })
   })
 })

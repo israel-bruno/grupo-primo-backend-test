@@ -66,7 +66,7 @@ export class TransactionEntity {
       id: faker.number.int({ min: 1, max: 1000000 }),
       accountId: account.id,
       kind: 'deposit',
-      value: Number(faker.finance.amount()),
+      value: targetAccount.balance + Number(faker.finance.amount()),
       createdAt: faker.date.anytime(),
       targetAccountId: targetAccount.id,
       account,

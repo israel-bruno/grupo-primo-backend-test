@@ -8,6 +8,8 @@ import { CreateAccountUseCase } from './use-cases/create-account/create-account.
 import { DepositDTO } from './use-cases/deposit/deposit.dto'
 import { DepositUseCase } from './use-cases/deposit/deposit.use-case'
 import { ListAccountsUseCase } from './use-cases/list-accounts/list-account.use-case'
+import { TransferDTO } from './use-cases/transfer/transfer.dto'
+import { TransferUseCase } from './use-cases/transfer/transfer.use-case'
 import { WithdrawDTO } from './use-cases/withdraw/withdraw.dto'
 import { WithdrawUseCase } from './use-cases/withdraw/withdraw.use-case'
 
@@ -19,6 +21,7 @@ export class AccountsController {
     private readonly listAccountUseCase: ListAccountsUseCase,
     private readonly withdrawUseCase: WithdrawUseCase,
     private readonly depositUseCase: DepositUseCase,
+    private readonly transferUseCase: TransferUseCase,
   ) {}
 
   @Get()
@@ -51,5 +54,13 @@ export class AccountsController {
   async deposit(@Param('id', ParseIntPipe) id: number, @Body() dto: DepositDTO): Promise<ResponseDTO> {
     const account = await this.depositUseCase.execute(id, dto)
     return new ResponseDTO('Successfully deposited', account)
+  }
+
+  @Post(':id/transfer')
+  @ApiOperation({ summary: 'Transfer funds' })
+  @ApiResponse({ example: new ResponseDTO('Successfully transfered', TransactionEntity.transferExample()) })
+  async transfer(@Param('id', ParseIntPipe) id: number, @Body() dto: TransferDTO): Promise<ResponseDTO> {
+    const account = await this.transferUseCase.execute(id, dto)
+    return new ResponseDTO('Successfully transfered', account)
   }
 }
