@@ -1,6 +1,7 @@
 import { DatabaseTestingModule } from '@app/core'
 import { Test, TestingModule } from '@nestjs/testing'
 import { AccountModuleEntities } from '../../accounts.module'
+import { AccountsRepository } from '../../repositories/accounts.repository'
 import { CreateAccountUseCase } from './create-account.use-case'
 
 describe('CreateAccountUseCase', () => {
@@ -9,7 +10,7 @@ describe('CreateAccountUseCase', () => {
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
       imports: [...DatabaseTestingModule(AccountModuleEntities)],
-      providers: [CreateAccountUseCase],
+      providers: [AccountsRepository, CreateAccountUseCase],
     }).compile()
 
     accountsUseCase = app.get<CreateAccountUseCase>(CreateAccountUseCase)

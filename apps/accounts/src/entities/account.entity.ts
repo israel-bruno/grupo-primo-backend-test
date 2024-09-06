@@ -1,3 +1,4 @@
+import { faker } from '@faker-js/faker'
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
 
 @Entity('accounts')
@@ -13,9 +14,9 @@ export class AccountEntity {
 
   static example(): AccountEntity {
     return {
-      id: 1,
-      name: 'John Doe',
-      balance: 300.0,
+      id: faker.number.int({ min: 1, max: 1000000 }),
+      name: faker.person.fullName(),
+      balance: Number(faker.finance.amount()),
     }
   }
 }
