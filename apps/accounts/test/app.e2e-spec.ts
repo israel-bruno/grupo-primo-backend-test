@@ -61,4 +61,19 @@ describe('AccountsController (e2e)', () => {
       expect(withdraws).toBe(2)
     })
   })
+
+  describe('/accounts/:id/deposit (POST)', () => {
+    it('should deposit funds', async () => {
+      const initialBalance = 0
+      const depositAmount = 99.97
+
+      const account = await accountsRepository.save({ name: faker.person.fullName(), balance: initialBalance })
+
+      await request(app.getHttpServer()).post(`/accounts/${account.id}/deposit`).send({ amount: depositAmount }).expect(201)
+
+      const accountAfterDeposit = await accountsRepository.findOneByOrFail({ id: account.id })
+
+      expect(accountAfterDeposit.balance).toBe(initialBalance + depositAmount)
+    })
+  })
 })

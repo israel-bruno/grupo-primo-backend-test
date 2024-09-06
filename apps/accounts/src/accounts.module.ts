@@ -6,11 +6,12 @@ import { AccountEntity } from './entities/account.entity'
 import { TransactionEntity } from './entities/transaction.entity'
 import { AccountsRepository } from './repositories/accounts.repository'
 import { CreateAccountUseCase } from './use-cases/create-account/create-account.use-case'
+import { DepositUseCase } from './use-cases/deposit/deposit.use-case'
 import { ListAccountsUseCase } from './use-cases/list-accounts/list-account.use-case'
 import { WithdrawUseCase } from './use-cases/withdraw/withdraw.use-case'
 
 export const AccountModuleEntities = [AccountEntity, TransactionEntity]
-const AccountUseCases = [CreateAccountUseCase, ListAccountsUseCase, WithdrawUseCase]
+const AccountUseCases = [CreateAccountUseCase, ListAccountsUseCase, WithdrawUseCase, DepositUseCase]
 const AccountRepositories = [AccountsRepository]
 
 @Module({

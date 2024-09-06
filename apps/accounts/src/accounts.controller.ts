@@ -2,8 +2,11 @@ import { ResponseDTO } from '@app/core'
 import { Body, Controller, Get, Param, ParseIntPipe, Post } from '@nestjs/common'
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
 import { AccountEntity } from './entities/account.entity'
+import { TransactionEntity } from './entities/transaction.entity'
 import { CreateAccountDTO } from './use-cases/create-account/create-account.dto'
 import { CreateAccountUseCase } from './use-cases/create-account/create-account.use-case'
+import { DepositDTO } from './use-cases/deposit/deposit.dto'
+import { DepositUseCase } from './use-cases/deposit/deposit.use-case'
 import { ListAccountsUseCase } from './use-cases/list-accounts/list-account.use-case'
 import { WithdrawDTO } from './use-cases/withdraw/withdraw.dto'
 import { WithdrawUseCase } from './use-cases/withdraw/withdraw.use-case'
@@ -11,7 +14,12 @@ import { WithdrawUseCase } from './use-cases/withdraw/withdraw.use-case'
 @Controller('accounts')
 @ApiTags('accounts')
 export class AccountsController {
-  constructor(private readonly createAccountUseCase: CreateAccountUseCase, private readonly listAccountUseCase: ListAccountsUseCase, private readonly withdrawUseCase: WithdrawUseCase) {}
+  constructor(
+    private readonly createAccountUseCase: CreateAccountUseCase,
+    private readonly listAccountUseCase: ListAccountsUseCase,
+    private readonly withdrawUseCase: WithdrawUseCase,
+    private readonly depositUseCase: DepositUseCase,
+  ) {}
 
   @Get()
   @ApiOperation({ summary: 'List accounts' })
@@ -31,9 +39,17 @@ export class AccountsController {
 
   @Post(':id/withdraw')
   @ApiOperation({ summary: 'Withdraw balance' })
-  @ApiResponse({ example: new ResponseDTO('Successfully withdrawn', AccountEntity.example()) })
+  @ApiResponse({ example: new ResponseDTO('Successfully withdrawn', TransactionEntity.withdrawExample()) })
   async withdraw(@Param('id', ParseIntPipe) id: number, @Body() dto: WithdrawDTO): Promise<ResponseDTO> {
     const account = await this.withdrawUseCase.execute(id, dto)
-    return new ResponseDTO('Account created', account)
+    return new ResponseDTO('Successfully withdrawn', account)
+  }
+
+  @Post(':id/deposit')
+  @ApiOperation({ summary: 'Deposit funds' })
+  @ApiResponse({ example: new ResponseDTO('Successfully deposited', TransactionEntity.depositExample()) })
+  async deposit(@Param('id', ParseIntPipe) id: number, @Body() dto: DepositDTO): Promise<ResponseDTO> {
+    const account = await this.depositUseCase.execute(id, dto)
+    return new ResponseDTO('Successfully deposited', account)
   }
 }
