@@ -1,5 +1,6 @@
 import { IUseCase } from '@app/core/interfaces'
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common'
+import { In } from 'typeorm'
 import { AccountEntity } from '../../entities/account.entity'
 import { TransactionEntity } from '../../entities/transaction.entity'
 import { TransactionKindEnum } from '../../helpers/transaction-kind.enum'
@@ -17,13 +18,15 @@ export class TransferUseCase implements IUseCase {
 
       if (id === dto.targetAccountId) throw new BadRequestException('Bad request', 'Cannot transfer founds to same account')
 
-      const account = await accountsRepository.findOne({ where: { id }, lock: { mode: 'pessimistic_write' } })
+      const accounts = await accountsRepository.find({ where: { id: In([id, dto.targetAccountId]) }, lock: { mode: 'pessimistic_write' } })
+
+      const account = accounts.find((account) => account.id == id)
+      const targetAccount = accounts.find((account) => account.id == dto.targetAccountId)
+
       if (!account) throw new NotFoundException('Account not found', `Could not to find account with id ${id}`)
+      if (!targetAccount) throw new NotFoundException('Account not found', `Could not to find account with id ${dto.targetAccountId}`)
 
       if (dto.amount > account.balance) throw new BadRequestException('Insuficient funds', `Insufficient funds to complete withdraw`)
-
-      const targetAccount = await accountsRepository.findOne({ where: { id: dto.targetAccountId }, lock: { mode: 'pessimistic_write' } })
-      if (!account) throw new NotFoundException('Account not found', `Could not to find account with id ${dto.targetAccountId}`)
 
       const transaction = await transactionsRepository.save(
         transactionsRepository.create({ accountId: id, kind: TransactionKindEnum.TRANSFER, value: dto.amount, targetAccountId: dto.targetAccountId }),
