@@ -61,10 +61,16 @@ Acessar a pasta do projeto
 cd grupo-primo-backend-test
 ```
 
+Criar .env a partir do arquivo .env.example
+
+```bash
+cp .env.example .env
+```
+
 Executar o Docker Compose
 
 ```bash
-docker-compose --env-file=.env.example up -d
+docker-compose up -d
 ```
 
 ## Como testar
@@ -76,17 +82,17 @@ Acessar a documentação dos endpoints:
 Acessar logs da aplicação:
 
 ```bash
-docker-compose --env-file=.env.example logs -f app
+docker-compose logs -f app
 ```
 
 Rodar testes unitários
 
 ```bash
-docker-compose --env-file=.env.example exec app npm run test
+docker-compose exec app npm run test
 ```
 
 Rodar testes e2e - (Estes contém os cenários de concorrência)
 
 ```bash
-docker-compose --env-file=.env.example exec app npm run test:e2e
+docker-compose exec app npm run test:e2e
 ```
